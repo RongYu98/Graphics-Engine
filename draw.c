@@ -69,9 +69,111 @@ void draw_polygons( struct matrix *polygons, screen s, color c ) {
 		 polygons->m[0][i],
 		 polygons->m[1][i],
 		 s, c);
+      if (i<4){
+	printf("Point: %f\n", polygons->m[0][i]);
+	scan_line( polygons->m[0][i],  polygons->m[1][i],
+		   polygons->m[0][i+1],polygons->m[1][i+1],
+		   polygons->m[0][i+2],polygons->m[1][i+2],
+		   s, c);
+      }
     }
+      
   }
 }
+
+void scan_line( double x0, double y0,
+		double x1, double y1,
+		double x2, double y2,
+		screen s, color c ) {
+  double xt, xm, xb, yt, ym, yb, xL, xR, yL, yR;
+  double d0, d1;
+
+  c.blue = 200;
+  c.green = 0;
+  c.red = 0;
+  //c.green = y1 + y2 + y0;
+  //c.red =(int) (x1*y1 + x2*y2)%255;
+  if ( y2 > y1 && y2 > y0 ){
+    yt = y2; xt = x2;
+    if ( y1 > y0 ){
+      ym = y1; xm = x1;
+      yb = y0; xb = x0;
+    } else {
+      ym = y0; xm = x0;
+      yb = y1; xb = x1;
+    }
+  } else if ( y1 > y2 && y1 > y0 ){
+    yt = y1; xt = x1;
+    if ( y2 > y0 ){
+      ym = y2; xm = x2;
+      yb = y0; xb = x0;
+    } else {
+      ym = y0; xm = x0;
+      yb = y2; xb = y2;
+    }
+  } else {
+    yt = y0; xt = x0;
+    if ( y1 > y2 ){
+      ym = y1; xm = x1;
+      yb = y2; xb = x2;
+    } else {
+      ym = y2; xm = x2;
+      yb = y1; xb = x1;
+    }
+  }
+
+  yt = (int)yt;
+  xt = (int)xt;
+  ym = (int)ym;
+  xm = (int)xm;
+  yb = (int)yb;
+  xb = (int)xb;
+
+  printf("Done initing\n");
+
+  d0 = (double)((double)(xt-xb)/(double)(yt - yb));
+  d1 = ( (xm-xb) / (ym - yb) ); // d1 = ( ( xt - xm ) / ( yt - ym ) );
+
+  // d0 is 0, d1 is -inf
+  
+  if (d1 > 9999 || d1 < -9999){
+    d1 = xm-xb;
+  }
+  if (d0 > 9999 || d0 < -9999){
+    d0 = xt-xb;
+  }
+
+  printf("xt is: %f\nxm is: %f \nxb is: %f\n", xt, xm, xb);
+  
+  printf("d0 is: %f\n", d0);
+  printf("d1 is: %f\n", d1);
+  
+  xR = xb; xL = xb;
+  //yR = yb; yL = yb;
+  draw_line( xL, yb, xR, yb, s, c );
+  
+  while ( yb <= ym ){
+    //(xb + Delta0, yb+1) → (xb+ Delta1, yb+1)
+    xL += d0;
+    xR += d1;
+    yb += 1;
+    draw_line( xL, yb, xR, yb, s, c );
+    printf("From %f to %f\n", xL, xR);
+  }
+
+  d1 = ( ( xt - xm ) / ( yt - ym ) );
+  while ( ym <= yt ){
+    //(xb + Delta0, yb+1) → (xb+ Delta1, yb+1)
+    xL += d0;
+    xR += d1;
+    ym += 1;
+    //draw_line( xL, ym, xR, ym, s, c );
+    //printf("In ym<=yt\n");
+  }
+  
+}
+
+
 
 
 /*======== void add_sphere() ==========
@@ -699,3 +801,31 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
   }
 }
 
+/*
+
+//right arm
+pop
+push
+move 100 150 0
+rotate x 50
+box 0 0 20 50 200 40
+//left arm
+pop
+push
+move -100 150 0
+rotate x -50
+box -50 0 0 50 200 40
+//right leg
+pop
+push
+move 100 -150 0
+rotate x -20
+box -60 0 20 60 100 40
+//left leg
+pop
+push
+move -100 -150 0
+rotate x 20
+box 0 0 20 60 100 40
+display
+quit*/
