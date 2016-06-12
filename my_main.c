@@ -333,6 +333,26 @@ void my_main( int polygons ) {
   struct vary_node **knobs;
   struct vary_node *vn;
   char frame_name[128];
+  struct light *spec;
+  struct light *amb;
+  struct light *dif;
+
+  // lighting = Iambient + Idiffuse + Ispecular
+  //reflective, 
+
+  amb->c[0] = .2; amb->c[1] = .2; amb->c[2] = .8;  //r,g,b constants
+  amb->l[0] =255; amb->l[1] =255; amb->l[3] = 255; // how much light
+  
+  spec->c[0] = .2; spec->c[1] = .2; spec->c[2] = .8; //r,g,b constants
+  spec->l[0] =255; spec->l[1] =255; spec->l[3] = 255;// how much light
+  
+  dif->c[0] = .2; dif->c[1] = .2; dif->c[2] = .8;  //r,g,b constants
+  dif->l[0] =255; dif->l[1] =255; dif->l[3] = 255; // how much light
+  
+  g.red = l->c[0] * l->l[0];
+  g.blue = l->c[1] * l->l[1];
+  g.blue = l->c[2] * l->l[2];
+
 
   struct matrix *zbuffer;
   zbuffer = new_matrix(XRES, YRES);
@@ -348,6 +368,8 @@ void my_main( int polygons ) {
   g.red = 0;
   g.green = 255;
   g.blue = 255;
+
+
 
 
   first_pass();
