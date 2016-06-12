@@ -54,7 +54,7 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
   for( i=0; i < polygons->lastcol-2; i+=3 ) {
 
     if ( calculate_dot( polygons, i ) < 0) {
-      printf("\ndrawing polygon\n");
+      //printf("\ndrawing polygon\n");
       draw_line( polygons->m[0][i],
 		 polygons->m[1][i],
 		 polygons->m[2][i],
