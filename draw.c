@@ -99,9 +99,9 @@ void scan_line( double x0, double y0, double z0,
   double d0, d1, dzT, dzM, dz;
 
   //printf("y0: %f y1: %f y2:%f\n", y0,y1,y2);
-  printf("x0, y0, z0: [%f, %f, %f]\n", x0,y0,z0);
-  printf("x1, y1, z1: [%f, %f, %f]\n", x1,y1,z1);
-  printf("x2, y2, z2: [%f, %f, %f]\n", x2,y2,z2);
+  //printf("x0, y0, z0: [%f, %f, %f]\n", x0,y0,z0);
+  //printf("x1, y1, z1: [%f, %f, %f]\n", x1,y1,z1);
+  //printf("x2, y2, z2: [%f, %f, %f]\n", x2,y2,z2);
   c.blue = 200;
   c.green = rand()%255;
   c.red = rand()%255;
