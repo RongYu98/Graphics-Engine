@@ -96,7 +96,7 @@ void scan_line( double x0, double y0, double z0,
 		double x2, double y2, double z2,
 		screen s, color c, struct matrix *zbuffer ) {
   double xt, xm, xb, yt, ym, yb, zt, zm, zb, xL, xR, yL, yR, zL, zR;
-  double d0, d1, dzT, dzM, dz;
+  double d0, d1, dzT, dzM;
 
   //printf("y0: %f y1: %f y2:%f\n", y0,y1,y2);
   //printf("x0, y0, z0: [%f, %f, %f]\n", x0,y0,z0);
@@ -148,15 +148,19 @@ void scan_line( double x0, double y0, double z0,
   
   if ( (double)(yt - yb) > .001){
     d0 = (double)((double)(xt-xb) / (double)(yt - yb));
+    dzT = (double)((double)(zt-zb)/ (double)(yt - yb));
   } else {
     d0 = xt-xb;
+    dzT = zt-zb;
   }
   if ( (double)(ym - yb) > .001){
     d1 = (double)((double)(xm-xb) / (double)(ym - yb)); // d1 = ( ( xt - xm ) / ( yt - ym ) );
+    dzM = (double)((double)(zm-zb)/ (double)(ym - yb));
   } else {
     d1 = xm-xb;
+    dzM = zm - zb;
   }
-  if ( (double)(zt - zb) > .001){
+  /*if ( (double)(zt - zb) > .001){
     dzT = (double)((double)(zt-zb) / (double)(yt - yb));
   } else {
     dzT = zt-zb;
@@ -165,7 +169,7 @@ void scan_line( double x0, double y0, double z0,
     dzM = (double)((double)(xm-xb) / (double)(ym - yb));
   } else {
     dzM = zm - zb;
-  }
+    }*/
     
   // d0 is 0, d1 is -inf
   
