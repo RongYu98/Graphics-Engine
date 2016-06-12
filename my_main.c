@@ -359,9 +359,11 @@ void my_main( int polygons ) {
   // doubble pt1 = calculate_dot2( norm, light);
   // scalar_multi( pt1, norm );
   // scalar_multi( 2, norm );
-  // matrix_sub( norm, light)
-//double alpha1 = 
+  // matrix_sub( norm, light);
+  // calculate_dot2( norm, view);
 
+  //diffuse: cp * kd * (L^ * N^)
+  // specular = calculate_dot(norm, light) * cp * kd;
   struct matrix *zbuffer;
   zbuffer = new_matrix(XRES, YRES);
   for (i=0; i<XRES; i++){

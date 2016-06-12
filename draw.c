@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -228,8 +228,27 @@ void scan_line( double x0, double y0, double z0,
   
 }
 
-
-
+///////////////// Lighting:
+void Diffuse( struct color *c, struct matrix *ls, struct matrix *norm ){
+  //c = color source;
+  double diff = calculte_dot2( ls, norm );
+  diff = Kd;
+  c.red *= diff;
+  c.blue *= diff;
+  c.green *= diff;
+}
+void Specular( struct color *c, struct matrix* light, struct matrix *view, double norm){ //view is (0,0,-1)
+  //double * norm = calculate_normal( x0, y0, z0, x1, y1, z1);
+  doubble pt1 = calculate_dot2( norm, light);
+  scalar_multi( pt1, norm );
+  scalar_multi( 2, norm );
+  matrix_sub( norm, light);
+  double alpha = calculate_dot2( norm, view);
+  alpha = alpha; //* alpha;
+  c.red *= ( alpha * Ks );
+  c.blue *= ( alpha * Ks );
+  c.green *= ( alpha * Ks );
+}
 
 /*======== void add_sphere() ==========
   Inputs:   struct matrix * points
