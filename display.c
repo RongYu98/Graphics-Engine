@@ -93,7 +93,7 @@ void plot( screen s, color c, int x, int y, int z, struct matrix *zbuffer) {
     c.green = 0;
   }
 		     
-  if ( x >= 0 && x < XRES && newy >=0 && newy < YRES && zbuffer->m[x][newy] <= z){
+  if ( x >= 0 && x < XRES && newy >=0 && newy < YRES && z > zbuffer->m[x][newy]){
     s[x][newy] = c;
     zbuffer->m[x][newy] = z;
   }
