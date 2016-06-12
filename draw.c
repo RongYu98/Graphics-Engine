@@ -199,7 +199,6 @@ void scan_line( double x0, double y0, double z0,
 
   //HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
 
-  //need to fix this!!!!!!!!!!!!
   while ( yb <= ym ){
     //(xb + Delta0, yb+1) → (xb+ Delta1, yb+1)
     xL += d0;
@@ -207,7 +206,7 @@ void scan_line( double x0, double y0, double z0,
     yb += 1;
     zL += dzT;
     zR += dzM;
-    draw_line( xL, yb, zL, xR, yb, zR, s, c, zbuffer );
+    draw_line( (int)xL, (int)yb, (int)zL, (int)xR, (int)yb, (int)zR, s, c, zbuffer );
     //printf("b->m: From [%f, %f] to [%f, %f]\n", xL, yb, xR,yb);
   }
 
@@ -220,7 +219,7 @@ void scan_line( double x0, double y0, double z0,
     yb += 1;
     zL += dzT;
     zR += dzM;
-    draw_line( xL, yb, zL, xR, yb, zR, s, c, zbuffer);
+    draw_line( (int)xL, (int)yb, (int)zL, (int)xR, (int)yb, (int)zR, s, c, zbuffer);
     //printf("m->b: From [%f, %f] to [%f, %f]\n", xL, yb, xR,yb);
   }
   //xL += d0;
