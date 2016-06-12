@@ -335,9 +335,9 @@ void my_main( int polygons ) {
   char frame_name[128];
 
   struct matrix *zbuffer;
-  zbuffer = new_matrix(500,500);
-  for (i=0; i<500; i++){
-    for (j=0; j<500; j++){
+  zbuffer = new_matrix(XRES, YRES);
+  for (i=0; i<XRES; i++){
+    for (j=0; j<YRES; j++){
       zbuffer->m[i][j] = INT_MIN;
     }
   }
