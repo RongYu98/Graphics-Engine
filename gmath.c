@@ -76,3 +76,18 @@ double calculate_dot( struct matrix *points, int i ) {
   free(normal);  
   return dot;
 }
+double calculate_dot2( struct matrix *points, struct matrix *light ) {
+
+  normal = points
+
+  //set up view vector
+  vx = light[0][0];
+  vy = light[1][0];
+  vz = light[2][0];
+
+  //calculate dot product
+  dot = normal[0] * vx + normal[1] * vy + normal[2] * vz;
+
+  free(normal);  
+  return dot;
+}

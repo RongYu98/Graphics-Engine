@@ -353,6 +353,14 @@ void my_main( int polygons ) {
   g.blue = l->c[1] * l->l[1];
   g.blue = l->c[2] * l->l[2];
 
+  //I specular = Cp * Ks * cosAlpha = Cp * Ks * 
+
+  // double * norm = calculate_normal( x0, y0, z0, x1, y1, z1);
+  // doubble pt1 = calculate_dot2( norm, light);
+  // scalar_multi( pt1, norm );
+  // scalar_multi( 2, norm );
+  // matrix_sub( norm, light)
+//double alpha1 = 
 
   struct matrix *zbuffer;
   zbuffer = new_matrix(XRES, YRES);

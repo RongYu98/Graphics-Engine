@@ -126,6 +126,15 @@ void scalar_mult(double x, struct matrix *m) {
 }
 
 
+struct matrix *matrix_sub( struct matrix *m1, struct matrix *m2){
+  int r, c;
+  for (r=0; r < m1->rows && r < m2->rows; r++){
+    for (c=0; c < m1->cols && c < m2->cols; c++){
+      m1->m[r][c] -= m2->m[r][c];
+    }
+  }
+}
+
 /*-------------- void matrix_mult() --------------
 Inputs:  struct matrix *a
          struct matrix *b 
