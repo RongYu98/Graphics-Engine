@@ -203,8 +203,8 @@ void scan_line( double x0, double y0, double z0,
     yb += 1;
     zL += dzT;
     zR += dzM;
-    //draw_line( xL, yb, zL, xR, yb, zR, s, c, zbuffer );
-    printf("b->m: From [%f, %f] to [%f, %f]\n", xL, yb, xR,yb);
+    draw_line( xL, yb, zL, xR, yb, zR, s, c, zbuffer );
+    //printf("b->m: From [%f, %f] to [%f, %f]\n", xL, yb, xR,yb);
   }
 
   d1 = ( ( xt - xm ) / ( yt - ym ) );
