@@ -48,90 +48,104 @@ triangles
 04/16/13 13:13:27
 jdyrlandweaver
 ====================*/
-void draw_polygons( struct matrix *polygons, screen s, color c ) {
+void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* zbuffer ) {
   
   int i;  
   for( i=0; i < polygons->lastcol-2; i+=3 ) {
 
-    if ( calculate_dot( polygons, i ) < 0 ) {
+    if ( calculate_dot( polygons, i ) < 0) {
       printf("\ndrawing polygon\n");
       draw_line( polygons->m[0][i],
 		 polygons->m[1][i],
+		 polygons->m[2][i],
 		 polygons->m[0][i+1],
 		 polygons->m[1][i+1],
-		 s, c);
+		 polygons->m[2][i+1],
+		 s, c, zbuffer);
       draw_line( polygons->m[0][i+1],
 		 polygons->m[1][i+1],
+		 polygons->m[2][i+1],
 		 polygons->m[0][i+2],
 		 polygons->m[1][i+2],
-		 s, c);
+		 polygons->m[2][i+2],
+		 s, c, zbuffer);
       draw_line( polygons->m[0][i+2],
 		 polygons->m[1][i+2],
+		 polygons->m[2][i+2],
 		 polygons->m[0][i],
 		 polygons->m[1][i],
-		 s, c);
-      //if (i<4){
+		 polygons->m[2][i],
+		 s, c, zbuffer);
+      //if (i > 110&& i < 115){
+      //if (i == 117){
       //printf("Point: %f\n", polygons->m[0][i]);
-      scan_line( polygons->m[0][i],  polygons->m[1][i],
-		 polygons->m[0][i+1],polygons->m[1][i+1],
-		 polygons->m[0][i+2],polygons->m[1][i+2],
-		 s, c);
-      printf("scannedLined this\n");
+      scan_line( polygons->m[0][i],  polygons->m[1][i],  polygons->m[2][i],
+		 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
+		 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2],
+		 s, c, zbuffer);
+	//}
+	//printf("scannedLined: %d\n", i);
       
     }
       
   }
 }
 
-void scan_line( double x0, double y0,
-		double x1, double y1,
-		double x2, double y2,
-		screen s, color c ) {
-  double xt, xm, xb, yt, ym, yb, xL, xR, yL, yR;
-  double d0, d1;
+void scan_line( double x0, double y0, double z0,
+		double x1, double y1, double z1,
+		double x2, double y2, double z2,
+		screen s, color c, struct matrix *zbuffer ) {
+  double xt, xm, xb, yt, ym, yb, zt, zm, zb, xL, xR, yL, yR, zL, zR;
+  double d0, d1, dzT, dzM, dz;
 
-  printf("y0: %f y1: %f y2:%f\n", y0,y1,y2);
+  //printf("y0: %f y1: %f y2:%f\n", y0,y1,y2);
+  printf("x0, y0, z0: [%f, %f, %f]\n", x0,y0,z0);
+  printf("x1, y1, z1: [%f, %f, %f]\n", x1,y1,z1);
+  printf("x2, y2, z2: [%f, %f, %f]\n", x2,y2,z2);
   c.blue = 200;
   c.green = rand()%255;
   c.red = rand()%255;
   
   //c.red =(int) (x1*y1 + x2*y2)%255;
   if ( y2 >= y1 && y2 >= y0 ){
-    yt = y2; xt = x2;
+    yt = y2; xt = x2; zt = z2;
     if ( y1 > y0 ){
-      ym = y1; xm = x1;
-      yb = y0; xb = x0;
+      ym = y1; xm = x1; zm = z1;
+      yb = y0; xb = x0; zb = z0;
     } else {
-      ym = y0; xm = x0;
-      yb = y1; xb = x1;
+      ym = y0; xm = x0; zm = z0;
+      yb = y1; xb = x1; zb = z1;
     }
   } else if ( y1 >= y2 && y1 >= y0 ){
-    yt = y1; xt = x1;
+    yt = y1; xt = x1; zt = z1;
     if ( y2 > y0 ){
-      ym = y2; xm = x2;
-      yb = y0; xb = x0;
+      ym = y2; xm = x2; zm = z2;
+      yb = y0; xb = x0; zb = z0;
     } else {
-      ym = y0; xm = x0;
-      yb = y2; xb = y2;
+      ym = y0; xm = x0; zm = z0;
+      yb = y2; xb = x2; zb = z2;
     }
   } else {
-    yt = y0; xt = x0;
+    yt = y0; xt = x0; zt = z0;
     if ( y1 > y2 ){
-      ym = y1; xm = x1;
-      yb = y2; xb = x2;
+      ym = y1; xm = x1; zm = z1;
+      yb = y2; xb = x2; zb = z2;
     } else {
-      ym = y2; xm = x2;
-      yb = y1; xb = x1;
+      ym = y2; xm = x2; zm = z2;
+      yb = y1; xb = x1; zb = z1;
     }
   }
 
   yt = (int)yt;
   xt = (int)xt;
+  zt = (int)zt;
   ym = (int)ym;
   xm = (int)xm;
+  zm = (int)zm;
   yb = (int)yb;
   xb = (int)xb;
-
+  zb = (int)zb;
+  
   if ( (double)(yt - yb) > .001){
     d0 = (double)((double)(xt-xb) / (double)(yt - yb));
   } else {
@@ -142,6 +156,16 @@ void scan_line( double x0, double y0,
   } else {
     d1 = xm-xb;
   }
+  if ( (double)(zt - zb) > .001){
+    dzT = (double)((double)(zt-zb) / (double)(yt - yb));
+  } else {
+    dzT = zt-zb;
+  }
+  if ( (double)(zm - zb) > .001){
+    dzM = (double)((double)(xm-xb) / (double)(ym - yb));
+  } else {
+    dzM = zm - zb;
+  }
     
   // d0 is 0, d1 is -inf
   
@@ -151,38 +175,53 @@ void scan_line( double x0, double y0,
   if (d0 > 9999 || d0 < -9999){
     d0 = xt-xb;
   }
+  if (dzT > 9999 || dzT < -9999){
+    dzT = zt-zb;
+  }
+  if (dzM > 9999 || dzM < -9999){
+    dzM = zm-zb;
+  }
 
-  printf("yt is: %f\nym is: %f \nyb is: %f\n", yt, ym, yb);
-  printf("xt is: %f\nxm is: %f \nxb is: %f\n", xt, xm, xb);
+  //printf("yt is: %f\nym is: %f \nyb is: %f\n", yt, ym, yb);
+  //printf("xt is: %f\nxm is: %f \nxb is: %f\n", xt, xm, xb);
   
-  printf("d0 is: %f\n", d0);
-  printf("d1 is: %f\n", d1);
+  //printf("d0 is: %f\n", d0);
+  //printf("d1 is: %f\n", d1);
   
   xR = xb; xL = xb;
+  zR = zb; zL = zb;
   //yR = yb; yL = yb;
-  draw_line( xL, yb, xR, yb, s, c );
-  
+  draw_line( xL, yb, zL, xR, yb, zR, s, c, zbuffer );
+
+  //HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+
+  //need to fix this!!!!!!!!!!!!
   while ( yb <= ym ){
     //(xb + Delta0, yb+1) → (xb+ Delta1, yb+1)
     xL += d0;
     xR += d1;
     yb += 1;
-    draw_line( xL, yb, xR, yb, s, c );
-    //printf("From %f to %f\n", xL, xR);
+    zL += dzT;
+    zR += dzM;
+    //draw_line( xL, yb, zL, xR, yb, zR, s, c, zbuffer );
+    printf("b->m: From [%f, %f] to [%f, %f]\n", xL, yb, xR,yb);
   }
 
   d1 = ( ( xt - xm ) / ( yt - ym ) );
-  while ( ym < yt ){
+  dzM = (double)( (double)( zt - zm) / (double)(yt - ym) );
+  while ( yb < yt ){
     //(xb + Delta0, yb+1) → (xb+ Delta1, yb+1)
     xL += d0;
     xR += d1;
-    ym += 1;
-    draw_line( xL, ym, xR, ym, s, c );
-    //printf("In ym<=yt\n");
+    yb += 1;
+    zL += dzT;
+    zR += dzM;
+    draw_line( xL, yb, zL, xR, yb, zR, s, c, zbuffer);
+    //printf("m->b: From [%f, %f] to [%f, %f]\n", xL, yb, xR,yb);
   }
   //xL += d0;
   //xR += d1;
-  draw_line( xL, yt, xR, yt, s, c );
+  //draw_line( xL, yt, xR, yt, s, c );
   
 }
 
@@ -670,7 +709,7 @@ Returns:
 Go through points 2 at a time and call draw_line to add that line
 to the screen
 ====================*/
-void draw_lines( struct matrix * points, screen s, color c) {
+void draw_lines( struct matrix * points, screen s, color c, struct matrix *zbuffer) {
 
   int i;
  
@@ -682,8 +721,9 @@ void draw_lines( struct matrix * points, screen s, color c) {
 
   for ( i = 0; i < points->lastcol - 1; i+=2 ) {
 
-    draw_line( points->m[0][i], points->m[1][i], 
-	       points->m[0][i+1], points->m[1][i+1], s, c);
+    draw_line( points->m[0][i], points->m[1][i], points->m[2][i],
+	       points->m[0][i+1], points->m[1][i+1], points->m[2][i+1],
+	       s, c, zbuffer);
     //FOR DEMONSTRATION PURPOSES ONLY
     //draw extra pixels so points can actually be seen    
     /*
@@ -708,34 +748,37 @@ void draw_lines( struct matrix * points, screen s, color c) {
 }
 
 
-void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
+void draw_line(int x0, int y0, int z0, int x1, int y1, int z1, screen s, color c, struct matrix * zbuffer) {
  
   int x, y, d, dx, dy;
-
+  double dz, z;
   x = x0;
   y = y0;
-  
+  z = z0;
   //swap points so we're always draing left to right
   if ( x0 > x1 ) {
     x = x1;
     y = y1;
+    z = (double)z1;
     x1 = x0;
     y1 = y0;
+    z1 = z0;
   }
 
   //need to know dx and dy for this version
   dx = (x1 - x) * 2;
   dy = (y1 - y) * 2;
-
+  //dz = (z1 - z) / (x1 - x0);
+  
   //positive slope: Octants 1, 2 (5 and 6)
   if ( dy > 0 ) {
 
     //slope < 1: Octant 1 (5)
     if ( dx > dy ) {
+      dz = (z1-z) / (x1 - x);
       d = dy - ( dx / 2 );
-  
       while ( x <= x1 ) {
-	plot(s, c, x, y);
+	plot(s, c, x, y, (int)z, zbuffer);
 
 	if ( d < 0 ) {
 	  x = x + 1;
@@ -746,15 +789,18 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
 	  y = y + 1;
 	  d = d + dy - dx;
 	}
+	z += dz;
       }
     }
 
     //slope > 1: Octant 2 (6)
     else {
       d = ( dy / 2 ) - dx;
+      dz= (z1-z) / (y1-y);// y always happens
+      
       while ( y <= y1 ) {
+	plot(s, c, x, y, (int)z, zbuffer );
 
-	plot(s, c, x, y );
 	if ( d > 0 ) {
 	  y = y + 1;
 	  d = d - dx;
@@ -764,6 +810,7 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
 	  x = x + 1;
 	  d = d + dy - dx;
 	}
+	z += dz;
       }
     }
   }
@@ -774,11 +821,12 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
     //slope > -1: Octant 8 (4)
     if ( dx > abs(dy) ) {
 
+      dz = ( z1 - z)/ (x1 - x);
       d = dy + ( dx / 2 );
   
       while ( x <= x1 ) {
 
-	plot(s, c, x, y);
+	plot(s, c, x, y, (int)z, zbuffer);
 
 	if ( d > 0 ) {
 	  x = x + 1;
@@ -789,17 +837,19 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
 	  y = y - 1;
 	  d = d + dy + dx;
 	}
+	z += dz;
       }
     }
 
     //slope < -1: Octant 7 (3)
     else {
 
+      dz = (z1-z) / (y1-y);
       d =  (dy / 2) + dx;
 
       while ( y >= y1 ) {
 	
-	plot(s, c, x, y );
+	plot(s, c, x, y, (int)z, zbuffer );
 	if ( d < 0 ) {
 	  y = y - 1;
 	  d = d + dx;
@@ -809,6 +859,7 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
 	  x = x + 1;
 	  d = d + dy + dx;
 	}
+	z += dz;
       }
     }
   }

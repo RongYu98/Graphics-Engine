@@ -1,3 +1,4 @@
+
 /*========== my_main.c ==========
 
   This is the only file you need to modify in order
@@ -51,6 +52,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <limits.h>
 #include "parser.h"
 #include "symtab.h"
 #include "y.tab.h"
@@ -151,7 +153,7 @@ struct vary_node ** second_pass() {
   struct vary_node ** knobs;
   struct vary_node * new_node;
   struct vary_node * curr;
-
+    
   knobs = (struct vary_node **)calloc( num_frames, 
 				       sizeof( struct vary_node * ) );
 
@@ -332,8 +334,16 @@ void my_main( int polygons ) {
   struct vary_node *vn;
   char frame_name[128];
 
+  struct matrix *zbuffer;
+  zbuffer = new_matrix(500,500);
+  for (i=0; i<500; i++){
+    for (j=0; j<500; j++){
+      zbuffer->m[i][j] = INT_MIN;
+    }
+  }
+  
   num_frames = 1;
-  step = 5;
+  step = 10;
  
   g.red = 0;
   g.green = 255;
@@ -387,7 +397,7 @@ void my_main( int polygons ) {
 		    step);
 	//apply the current top origin
 	matrix_mult( s->data[ s->top ], tmp );
-	draw_polygons( tmp, t, g );
+	draw_polygons( tmp, t, g, zbuffer );
 	tmp->lastcol = 0;
 	break;
 
@@ -399,7 +409,7 @@ void my_main( int polygons ) {
 		   op[i].op.torus.r1,
 		   step);
 	matrix_mult( s->data[ s->top ], tmp );
-	draw_polygons( tmp, t, g );
+	draw_polygons( tmp, t, g, zbuffer );
 	tmp->lastcol = 0;
 	break;
 
@@ -411,7 +421,7 @@ void my_main( int polygons ) {
 		 op[i].op.box.d1[1],
 		 op[i].op.box.d1[2]);
 	matrix_mult( s->data[ s->top ], tmp );
-	draw_polygons( tmp, t, g );
+	draw_polygons( tmp, t, g, zbuffer );
 	tmp->lastcol = 0;
 	break;
 
@@ -422,7 +432,7 @@ void my_main( int polygons ) {
 		  op[i].op.line.p1[0],
 		  op[i].op.line.p1[1],
 		  op[i].op.line.p1[1]);
-	draw_lines( tmp, t, g );
+	draw_lines( tmp, t, g, zbuffer );
 	tmp->lastcol = 0;
 	break;
 

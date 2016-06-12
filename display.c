@@ -75,10 +75,28 @@ pixel 0, 0 located at the lower left corner of the screen
 02/12/10 09:09:00
 jdyrlandweaver
 ====================*/
-void plot( screen s, color c, int x, int y) {
+void plot( screen s, color c, int x, int y, int z, struct matrix *zbuffer) {
   int newy = YRES - 1 - y;
-  if ( x >= 0 && x < XRES && newy >=0 && newy < YRES )
+  if (c.red > 255){
+    c.red = 255;
+  } else if (c.red < 0){
+    c.red = 0;
+  }
+  if (c.blue > 255){
+    c.blue = 255;
+  } else if (c.blue < 0){
+    c.blue = 0;
+  }
+  if (c.green > 255){
+    c.green = 255;
+  } else if (c.green < 0){
+    c.green = 0;
+  }
+		     
+  if ( x >= 0 && x < XRES && newy >=0 && newy < YRES && zbuffer->m[x][y] <= z){
     s[x][newy] = c;
+    zbuffer->m[x][newy] = z;
+  }
 }
 
 /*======== void clear_screen() ==========
