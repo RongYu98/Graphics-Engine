@@ -6,7 +6,7 @@ rotate y 45
 //box -100 150 25 200 300 50
 //save box.png
 sphere 0 0 0 200
-move 100 0 -200
-sphere 0 0 0 200
+move 100 1 -200
+//sphere 0 0 0 200
 save pics.png
 //display
