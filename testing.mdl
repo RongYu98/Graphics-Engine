@@ -8,6 +8,6 @@ move 250 250 0
 //save box.png
 sphere 0 0 0 200
 move 0 10 -100
-sphere 0 0 0 200
+sphere 50 0 0 200
 save pics.png
 //display
