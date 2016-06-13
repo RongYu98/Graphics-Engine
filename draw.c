@@ -66,19 +66,15 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 
       double * norm = calculate_normal( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
 				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
-      //printf("21\n");
       double diff = calculate_dot2( light, norm );
       diff *= Kd;
       c1.red *= diff;
       c1.blue *= diff;
       c1.green *= diff; /////end dif
-      printf("22\n");
       double pt1 = calculate_dot2( norm, light);
       norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
       norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
-      printf("23\n");
       double alpha = calculate_dot2( norm, view);
-      printf("24\n");
       //alpha = alpha; //* alpha;
       c2.red *= ( alpha * Ks );
       c2.blue *= ( alpha * Ks );
@@ -93,9 +89,7 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
       c4.green = (c1.green + c2.green + c3.green);
       c4.blue = (c1.blue+ c2.blue + c3.blue);
       //color c4 = add_c( c1, c2, c3 );
-      printf("44\n");
       c1 = c; c2=c; c3 = c; c4=c;
-      printf("11\n");
       draw_line( polygons->m[0][i],
 		 polygons->m[1][i],
 		 polygons->m[2][i],
@@ -125,7 +119,6 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
       c3.red *= Ka;
       c3.green *= Ka;
       c3.blue *= Ka;
-      printf("2\n");
       c4.red = (c1.red + c2.red + c3.red);
       c4.green = (c1.green + c2.green + c3.green);
       c4.blue = (c1.blue+ c2.blue + c3.blue);
