@@ -50,41 +50,73 @@ triangles
 04/16/13 13:13:27
 jdyrlandweaver
 ====================*/
-void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* zbuffer ) {
-  
+void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* zbuffer, double* ls ) {
+
   int i;  
+  color c1, c2, c3, cTotal;
   for( i=0; i < polygons->lastcol-2; i+=3 ) {
 
     if ( calculate_dot( polygons, i ) < 0) {
       //printf("\ndrawing polygon\n");
+
+      double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
+				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
+      c1 = Diffuse( c, ls, norm );
+      c2 = Specular( c, ls, norm );
+      c3 = Ambient( c );
+      c4 = add_c( c1, c2, c3 );
       draw_line( polygons->m[0][i],
 		 polygons->m[1][i],
 		 polygons->m[2][i],
 		 polygons->m[0][i+1],
 		 polygons->m[1][i+1],
 		 polygons->m[2][i+1],
-		 s, c, zbuffer);
+		 s, c4, zbuffer);
+      norm = calculate( polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
+				 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2]);
+      c1 = Diffuse( c, ls, norm );
+      c2 = Specular( c, ls, norm );
+      c3 = Ambient( c );
+      c4 = add_c( c1, c2, c3 );
       draw_line( polygons->m[0][i+1],
 		 polygons->m[1][i+1],
 		 polygons->m[2][i+1],
 		 polygons->m[0][i+2],
 		 polygons->m[1][i+2],
 		 polygons->m[2][i+2],
-		 s, c, zbuffer);
+		 s, c4, zbuffer);
+      norm = calculate( polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
+				 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2]);
+      c1 = Diffuse( c, ls, norm );
+      c2 = Specular( c, ls, norm );
+      c3 = Ambient( c );
+      c4 = add_c( c1, c2, c3 );
       draw_line( polygons->m[0][i+2],
 		 polygons->m[1][i+2],
 		 polygons->m[2][i+2],
 		 polygons->m[0][i],
 		 polygons->m[1][i],
 		 polygons->m[2][i],
-		 s, c, zbuffer);
+		 s, c4, zbuffer);
       //if (i > 110&& i < 115){
       //if (i == 117){
       //printf("Point: %f\n", polygons->m[0][i]);
+
+      double * norm1 = calculate( polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
+				 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2]);
+      double * norm2 = calculate( polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
+				 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2]);
+
+      norm[0] = (norm1[0]+norm2[0])/2; norm[0] = (norm1[1]+norm2[1])/2; norm[2] = (norm1[2]+norm2[2])/2; 
+      c1 = Diffuse( c, ls, norm );
+      c2 = Specular( c, ls, norm );
+      c3 = Ambient( c );
+      c4 = add_c( c1, c2, c3 );
+
       scan_line( polygons->m[0][i],  polygons->m[1][i],  polygons->m[2][i],
 		 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
 		 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2],
-		 s, c, zbuffer);
+		 s, c4, zbuffer);
 	//}
 	//printf("scannedLined: %d\n", i);
       
@@ -231,7 +263,7 @@ void scan_line( double x0, double y0, double z0,
 }
 
 ///////////////// Lighting:
-color Diffuse( color c, struct matrix *ls, struct matrix *norm ){
+color Diffuse( color c, double *ls, double *norm ){
   //c = color source;
   double diff = calculate_dot2( ls, norm );
   diff *= Kd;
@@ -240,18 +272,35 @@ color Diffuse( color c, struct matrix *ls, struct matrix *norm ){
   c.green *= diff;
   return c;
 }
-color Specular( color c, struct matrix* light, struct matrix *view, struct matrix * norm){ //view is (0,0,-1)
+color Specular( color c, double* light, double * norm){ //view is (0,0,-1)
+  double *view = (double *)malloc(3 * sizeof(double));
+  view[0] = 0; view[1] = 0; view[2] = -1;
+
   //double * norm = calculate_normal( x0, y0, z0, x1, y1, z1);
   double pt1 = calculate_dot2( norm, light);
-  scalar_mult( pt1, norm );
-  scalar_mult( 2, norm );
-  matrix_sub( norm, light);
+  //scalar_mult( pt1, norm );
+  //scalar_mult( 2, norm );
+  norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
+  //matrix_sub( norm, light);
+  norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
   double alpha = calculate_dot2( norm, view);
   alpha = alpha; //* alpha;
   c.red *= ( alpha * Ks );
   c.blue *= ( alpha * Ks );
   c.green *= ( alpha * Ks );
   return c;
+}
+color Ambient( color c ){
+  c.red *= Ka;
+  c.green *= ka;
+  c.blue *= Ka;
+  return c;
+}
+color add_c(color c1, color c2, color c3){
+  c1.red += (c2.red + c3.red);
+  c1.green += (c2.green + c3.green);
+  c1.blue += (c2.blue + c3.blue);
+  return c1;
 }
 
 /*======== void add_sphere() ==========

@@ -354,9 +354,8 @@ void my_main( int polygons ) {
   dif->c[0] = .2; dif->c[1] = .2; dif->c[2] = .8;  //r,g,b constants
   dif->l[0] =255; dif->l[1] =255; dif->l[3] = 255; // how much light
   
-  //g.red = l->c[0] * l->l[0];
-  //g.blue = l->c[1] * l->l[1];
-  //g.blue = l->c[2] * l->l[2];
+  double *ls = (double *)malloc(3 * sizeof(double));
+  ls[0] = 1; ls[1] = 1; ls[2] = 1; ls[3] = 1;
 
   //I specular = Cp * Ks * cosAlpha = Cp * Ks * 
 
@@ -369,6 +368,7 @@ void my_main( int polygons ) {
 
   //diffuse: cp * kd * (L^ * N^)
   // specular = calculate_dot(norm, light) * cp * kd;
+
   struct matrix *zbuffer;
   zbuffer = new_matrix(XRES, YRES);
   for (i=0; i<XRES; i++){
@@ -383,9 +383,6 @@ void my_main( int polygons ) {
   g.red = 0;
   g.green = 255;
   g.blue = 255;
-
-
-
 
   first_pass();
 
@@ -434,7 +431,7 @@ void my_main( int polygons ) {
 		    step);
 	//apply the current top origin
 	matrix_mult( s->data[ s->top ], tmp );
-	draw_polygons( tmp, t, g, zbuffer );
+	draw_polygons( tmp, t, g, zbuffer, ls );
 	tmp->lastcol = 0;
 	break;
 
@@ -446,7 +443,7 @@ void my_main( int polygons ) {
 		   op[i].op.torus.r1,
 		   step);
 	matrix_mult( s->data[ s->top ], tmp );
-	draw_polygons( tmp, t, g, zbuffer );
+	draw_polygons( tmp, t, g, zbuffer, ls );
 	tmp->lastcol = 0;
 	break;
 
@@ -458,7 +455,7 @@ void my_main( int polygons ) {
 		 op[i].op.box.d1[1],
 		 op[i].op.box.d1[2]);
 	matrix_mult( s->data[ s->top ], tmp );
-	draw_polygons( tmp, t, g, zbuffer );
+	draw_polygons( tmp, t, g, zbuffer, ls );
 	tmp->lastcol = 0;
 	break;
 
