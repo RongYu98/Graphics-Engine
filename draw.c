@@ -195,7 +195,6 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
       c4.blue = (c1.blue+ c2.blue + c3.blue);
       //color c4 = add_c( c1, c2, c3 );
       c1 = c; c2=c; c3 = c; c4=c;
-      printf("2\n");
       scan_line( polygons->m[0][i],  polygons->m[1][i],  polygons->m[2][i],
 		 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
 		 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2],
