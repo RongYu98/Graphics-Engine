@@ -355,7 +355,7 @@ void my_main( int polygons ) {
   //dif->l[0] =255; dif->l[1] =255; dif->l[3] = 255; // how much light
   
   double *ls = (double *)malloc(4 * sizeof(double));
-  //ls[0] = 1; ls[1] = 1; ls[2] = 1; ls[3] = 0;
+  ls[0] = 1; ls[1] = 1; ls[2] = 1; ls[3] = 0;
 
   //I specular = Cp * Ks * cosAlpha = Cp * Ks * 
 
