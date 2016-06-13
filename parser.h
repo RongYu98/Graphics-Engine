@@ -9,7 +9,7 @@
 extern int lastop;
 
 #define Ka 0
-#define Kd .3
+#define Kd 0
 #define Ks 0
 
 
