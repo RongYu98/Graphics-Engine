@@ -8,9 +8,9 @@
 
 extern int lastop;
 
-#define Ka .3
-#define Kd .2
-#define Ks .2
+#define Ka .4
+#define Kd .4
+#define Ks 0
 
 
 struct command
