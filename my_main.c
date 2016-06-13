@@ -345,17 +345,17 @@ void my_main( int polygons ) {
   // lighting = Iambient + Idiffuse + Ispecular
   //reflective, 
 
-  amb->c[0] = .2; amb->c[1] = .2; amb->c[2] = .8;  //r,g,b constants
-  amb->l[0] =255; amb->l[1] =255; amb->l[3] = 255; // how much light
+  //amb->c[0] = .2; amb->c[1] = .2; amb->c[2] = .8;  //r,g,b constants
+  //amb->l[0] =255; amb->l[1] =255; amb->l[3] = 255; // how much light
   
-  spec->c[0] = .2; spec->c[1] = .2; spec->c[2] = .8; //r,g,b constants
-  spec->l[0] =255; spec->l[1] =255; spec->l[3] = 255;// how much light
+  //spec->c[0] = .2; spec->c[1] = .2; spec->c[2] = .8; //r,g,b constants
+  //spec->l[0] =255; spec->l[1] =255; spec->l[3] = 255;// how much light
   
-  dif->c[0] = .2; dif->c[1] = .2; dif->c[2] = .8;  //r,g,b constants
-  dif->l[0] =255; dif->l[1] =255; dif->l[3] = 255; // how much light
+  //dif->c[0] = .2; dif->c[1] = .2; dif->c[2] = .8;  //r,g,b constants
+  //dif->l[0] =255; dif->l[1] =255; dif->l[3] = 255; // how much light
   
-  double *ls = (double *)malloc(3 * sizeof(double));
-  ls[0] = 1; ls[1] = 1; ls[2] = 1; ls[3] = 1;
+  double *ls = (double *)malloc(4 * sizeof(double));
+  //ls[0] = 1; ls[1] = 1; ls[2] = 1; ls[3] = 0;
 
   //I specular = Cp * Ks * cosAlpha = Cp * Ks * 
 
@@ -425,6 +425,7 @@ void my_main( int polygons ) {
 
       case SPHERE:
 	add_sphere( tmp,op[i].op.sphere.d[0], //cx
+
 		    op[i].op.sphere.d[1],  //cy
 		    op[i].op.sphere.d[2],  //cz
 		    op[i].op.sphere.r,

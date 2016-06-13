@@ -89,6 +89,6 @@ double calculate_dot2( double *points, double *light ) {
   //calculate dot product
   double dot = normal[0] * vx + normal[1] * vy + normal[2] * vz;
 
-  free(normal);  
+  //free(normal);  
   return dot;
 }
