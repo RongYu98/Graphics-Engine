@@ -52,10 +52,14 @@ jdyrlandweaver
 ====================*/
 void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* zbuffer, double* ls ) {
 
+  double *view = (double *)malloc(3 * sizeof(double));
+  view[0] = 0; view[1] = 0; view[2] = -1;
+
   int i;  
   color c1 = c;
   color c2 = c;
-  color c3, c4;
+  color c3 = c; 
+  color c4 = c;
   for( i=0; i < polygons->lastcol-2; i+=3 ) {
 
     if ( calculate_dot( polygons, i ) < 0) {
@@ -63,10 +67,32 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 
       double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
 				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
-      color c1 = Diffuse( c, ls, norm )
-      color c2 = Specular( c, ls, norm );
-      color c3 = Ambient( c );
-      color c4 = add_c( c1, c2, c3 );
+      
+      double diff = calculate_dot2( ls, norm );
+      diff *= Kd;
+      c1.red *= diff;
+      c1.blue *= diff;
+      c1.green *= diff; /////end dif
+      double pt1 = calculate_dot2( norm, light);
+      norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
+      norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
+      double alpha = calculate_dot2( norm, view);
+      //alpha = alpha; //* alpha;
+      c2.red *= ( alpha * Ks );
+      c2.blue *= ( alpha * Ks );
+      c2.green *= ( alpha * Ks ); /// end specu
+      //c2 = Specular( c, ls, norm );
+
+      c3.red *= Ka;
+      c3.green *= Ka;
+      c3.blue *= Ka;
+
+      c4.red = (c1.red + c2.red + c3.red);
+      c4.green = (c1.green + c2.green + c3.green);
+      c4.blue = (c1.blue+ c2.blue + c3.blue);
+      //color c4 = add_c( c1, c2, c3 );
+      c1 = c; c2=c; c3 = c; c4=c;
+
       draw_line( polygons->m[0][i],
 		 polygons->m[1][i],
 		 polygons->m[2][i],
@@ -74,12 +100,34 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 		 polygons->m[1][i+1],
 		 polygons->m[2][i+1],
 		 s, c4, zbuffer);
-      norm = calculate( polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
-				 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2]);
-      c1 = Diffuse( c, ls, norm );
-      c2 = Specular( c, ls, norm );
-      c3 = Ambient( c );
-      c4 = add_c( c1, c2, c3 );
+
+      double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
+				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
+      
+      double diff = calculate_dot2( ls, norm );
+      diff *= Kd;
+      c1.red *= diff;
+      c1.blue *= diff;
+      c1.green *= diff; /////end dif
+      double pt1 = calculate_dot2( norm, light);
+      norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
+      norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
+      double alpha = calculate_dot2( norm, view);
+      //alpha = alpha; //* alpha;
+      c2.red *= ( alpha * Ks );
+      c2.blue *= ( alpha * Ks );
+      c2.green *= ( alpha * Ks ); /// end specu
+      //c2 = Specular( c, ls, norm );
+
+      c3.red *= Ka;
+      c3.green *= Ka;
+      c3.blue *= Ka;
+
+      c4.red = (c1.red + c2.red + c3.red);
+      c4.green = (c1.green + c2.green + c3.green);
+      c4.blue = (c1.blue+ c2.blue + c3.blue);
+      //color c4 = add_c( c1, c2, c3 );
+      c1 = c; c2=c; c3 = c; c4=c;
       draw_line( polygons->m[0][i+1],
 		 polygons->m[1][i+1],
 		 polygons->m[2][i+1],
@@ -87,19 +135,33 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 		 polygons->m[1][i+2],
 		 polygons->m[2][i+2],
 		 s, c4, zbuffer);
-      norm = calculate( polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
-				 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2]);
-      c1 = Diffuse( c, ls, norm );
-      c2 = Specular( c, ls, norm );
-      c3 = Ambient( c );
-      c4 = add_c( c1, c2, c3 );
-      draw_line( polygons->m[0][i+2],
-		 polygons->m[1][i+2],
-		 polygons->m[2][i+2],
-		 polygons->m[0][i],
-		 polygons->m[1][i],
-		 polygons->m[2][i],
-		 s, c4, zbuffer);
+      double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
+				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
+      
+      double diff = calculate_dot2( ls, norm );
+      diff *= Kd;
+      c1.red *= diff;
+      c1.blue *= diff;
+      c1.green *= diff; /////end dif
+      double pt1 = calculate_dot2( norm, light);
+      norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
+      norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
+      double alpha = calculate_dot2( norm, view);
+      //alpha = alpha; //* alpha;
+      c2.red *= ( alpha * Ks );
+      c2.blue *= ( alpha * Ks );
+      c2.green *= ( alpha * Ks ); /// end specu
+      //c2 = Specular( c, ls, norm );
+
+      c3.red *= Ka;
+      c3.green *= Ka;
+      c3.blue *= Ka;
+
+      c4.red = (c1.red + c2.red + c3.red);
+      c4.green = (c1.green + c2.green + c3.green);
+      c4.blue = (c1.blue+ c2.blue + c3.blue);
+      //color c4 = add_c( c1, c2, c3 );
+      c1 = c; c2=c; c3 = c; c4=c;
       //if (i > 110&& i < 115){
       //if (i == 117){
       //printf("Point: %f\n", polygons->m[0][i]);
@@ -110,11 +172,33 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 				 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2]);
 
       norm[0] = (norm1[0]+norm2[0])/2; norm[0] = (norm1[1]+norm2[1])/2; norm[2] = (norm1[2]+norm2[2])/2; 
-      c1 = Diffuse( c, ls, norm );
-      c2 = Specular( c, ls, norm );
-      c3 = Ambient( c );
-      c4 = add_c( c1, c2, c3 );
+      double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
+				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
+      
+      double diff = calculate_dot2( ls, norm );
+      diff *= Kd;
+      c1.red *= diff;
+      c1.blue *= diff;
+      c1.green *= diff; /////end dif
+      double pt1 = calculate_dot2( norm, light);
+      norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
+      norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
+      double alpha = calculate_dot2( norm, view);
+      //alpha = alpha; //* alpha;
+      c2.red *= ( alpha * Ks );
+      c2.blue *= ( alpha * Ks );
+      c2.green *= ( alpha * Ks ); /// end specu
+      //c2 = Specular( c, ls, norm );
 
+      c3.red *= Ka;
+      c3.green *= Ka;
+      c3.blue *= Ka;
+
+      c4.red = (c1.red + c2.red + c3.red);
+      c4.green = (c1.green + c2.green + c3.green);
+      c4.blue = (c1.blue+ c2.blue + c3.blue);
+      //color c4 = add_c( c1, c2, c3 );
+      c1 = c; c2=c; c3 = c; c4=c;
       scan_line( polygons->m[0][i],  polygons->m[1][i],  polygons->m[2][i],
 		 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1],
 		 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2],
