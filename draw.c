@@ -53,7 +53,9 @@ jdyrlandweaver
 void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* zbuffer, double* ls ) {
 
   int i;  
-  color c1, c2, c3, cTotal;
+  color c1 = c;
+  color c2 = c;
+  color c3, c4;
   for( i=0; i < polygons->lastcol-2; i+=3 ) {
 
     if ( calculate_dot( polygons, i ) < 0) {
@@ -61,10 +63,10 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 
       double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
 				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
-      c1 = Diffuse( c, ls, norm );
-      c2 = Specular( c, ls, norm );
-      c3 = Ambient( c );
-      c4 = add_c( c1, c2, c3 );
+      color c1 = Diffuse( c, ls, norm )
+      color c2 = Specular( c, ls, norm );
+      color c3 = Ambient( c );
+      color c4 = add_c( c1, c2, c3 );
       draw_line( polygons->m[0][i],
 		 polygons->m[1][i],
 		 polygons->m[2][i],
@@ -263,8 +265,10 @@ void scan_line( double x0, double y0, double z0,
 }
 
 ///////////////// Lighting:
-color Diffuse( color c, double *ls, double *norm ){
+color Diffuse( color C, double *ls, double *norm ){
   //c = color source;
+  color c;
+  c.red = C.red; c.blue = C.blue; c.green = C.green;
   double diff = calculate_dot2( ls, norm );
   diff *= Kd;
   c.red *= diff;
@@ -292,7 +296,7 @@ color Specular( color c, double* light, double * norm){ //view is (0,0,-1)
 }
 color Ambient( color c ){
   c.red *= Ka;
-  c.green *= ka;
+  c.green *= Ka;
   c.blue *= Ka;
   return c;
 }
