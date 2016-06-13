@@ -83,7 +83,7 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
       c2.blue *= ( alpha * Ks );
       c2.green *= ( alpha * Ks ); /// end specu
       //c2 = Specular( c, ls, norm );
-      //printf("Red is %d and %d, Blue is %d and %d, Green is %d and %d\n", c1.red, c2.red, c1.blue, c2.blue, c1.green, c2.green);
+      printf("Red is %d and %d, Blue is %d and %d, Green is %d and %d\n", c1.red, c2.red, c1.blue, c2.blue, c1.green, c2.green);
       
       c3.red *= Ka;
       c3.green *= Ka;
