@@ -337,6 +337,11 @@ void my_main( int polygons ) {
   struct light *amb;
   struct light *dif;
 
+  //double Ka = .4;
+  //double Kd = .3;
+  //double Ks = .3;
+  
+  
   // lighting = Iambient + Idiffuse + Ispecular
   //reflective, 
 
@@ -349,9 +354,9 @@ void my_main( int polygons ) {
   dif->c[0] = .2; dif->c[1] = .2; dif->c[2] = .8;  //r,g,b constants
   dif->l[0] =255; dif->l[1] =255; dif->l[3] = 255; // how much light
   
-  g.red = l->c[0] * l->l[0];
-  g.blue = l->c[1] * l->l[1];
-  g.blue = l->c[2] * l->l[2];
+  //g.red = l->c[0] * l->l[0];
+  //g.blue = l->c[1] * l->l[1];
+  //g.blue = l->c[2] * l->l[2];
 
   //I specular = Cp * Ks * cosAlpha = Cp * Ks * 
 
