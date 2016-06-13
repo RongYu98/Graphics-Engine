@@ -101,18 +101,18 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 		 polygons->m[2][i+1],
 		 s, c4, zbuffer);
 
-      double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
+      norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
 				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
       
-      double diff = calculate_dot2( ls, norm );
+      diff = calculate_dot2( ls, norm );
       diff *= Kd;
       c1.red *= diff;
       c1.blue *= diff;
       c1.green *= diff; /////end dif
-      double pt1 = calculate_dot2( norm, light);
+      pt1 = calculate_dot2( norm, light);
       norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
       norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
-      double alpha = calculate_dot2( norm, view);
+      alpha = calculate_dot2( norm, view);
       //alpha = alpha; //* alpha;
       c2.red *= ( alpha * Ks );
       c2.blue *= ( alpha * Ks );
@@ -135,18 +135,18 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 		 polygons->m[1][i+2],
 		 polygons->m[2][i+2],
 		 s, c4, zbuffer);
-      double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
+      norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
 				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
       
-      double diff = calculate_dot2( ls, norm );
+      diff = calculate_dot2( ls, norm );
       diff *= Kd;
       c1.red *= diff;
       c1.blue *= diff;
       c1.green *= diff; /////end dif
-      double pt1 = calculate_dot2( norm, light);
+      pt1 = calculate_dot2( norm, light);
       norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
       norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
-      double alpha = calculate_dot2( norm, view);
+      alpha = calculate_dot2( norm, view);
       //alpha = alpha; //* alpha;
       c2.red *= ( alpha * Ks );
       c2.blue *= ( alpha * Ks );
@@ -172,18 +172,18 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 				 polygons->m[0][i+2],polygons->m[1][i+2],polygons->m[2][i+2]);
 
       norm[0] = (norm1[0]+norm2[0])/2; norm[0] = (norm1[1]+norm2[1])/2; norm[2] = (norm1[2]+norm2[2])/2; 
-      double * norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
+      norm = calculate( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
 				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
       
-      double diff = calculate_dot2( ls, norm );
+      diff = calculate_dot2( ls, norm );
       diff *= Kd;
       c1.red *= diff;
       c1.blue *= diff;
       c1.green *= diff; /////end dif
-      double pt1 = calculate_dot2( norm, light);
+      pt1 = calculate_dot2( norm, light);
       norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
       norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
-      double alpha = calculate_dot2( norm, view);
+      alpha = calculate_dot2( norm, view);
       //alpha = alpha; //* alpha;
       c2.red *= ( alpha * Ks );
       c2.blue *= ( alpha * Ks );
