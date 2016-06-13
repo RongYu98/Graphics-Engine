@@ -8,8 +8,8 @@
 
 extern int lastop;
 
-#define Ka 1
-#define Kd 0
+#define Ka .5
+#define Kd .2
 #define Ks 0
 
 

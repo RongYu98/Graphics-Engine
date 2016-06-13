@@ -10,4 +10,4 @@ sphere 0 0 0 200
 move 0 10 -100
 //sphere 50 0 0 200
 save pics.png
-//display
+display

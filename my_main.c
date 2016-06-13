@@ -380,8 +380,8 @@ void my_main( int polygons ) {
   num_frames = 1;
   step = 10;
  
-  g.red = 0;
-  g.green = 255;
+  g.red = 100;
+  g.green = 100;
   g.blue = 255;
 
   first_pass();

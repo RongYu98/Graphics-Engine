@@ -87,8 +87,19 @@ double calculate_dot2( double *points, double *light ) {
   vz = light[2];
 
   //calculate dot product
-  double dot = normal[0] * vx + normal[1] * vy + normal[2] * vz;
+  double dot = points[0] * vx + points[1] * vy + points[2] * vz;
 
   //free(normal);  
   return dot;
+}
+void normalize( double *points){
+
+  double x,y,z;
+  x = points[0];
+  y = points[1];
+  z = points[2];
+  double d = x*y*z;
+  points[0] = x / d;
+  points[1] = y / d;
+  points[2] = z / d;
 }

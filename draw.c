@@ -68,22 +68,28 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
 				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
       printf("norm: %f, %f, %f\n", norm[0], norm[1], norm[2]);
       printf("ligt: %f, %f, %f\n", light[0], light[1], light[2]);
-      double diff = calculate_dot2( light, norm );
-      //printf("Diff: %f, KD: %f\n", diff, Kd ); //diff is 0
+      double diff = calculate_dot2( norm, light ); //FIXED, make the second one the light/view
+      printf("Diff: %f, KD: %f\n", diff, Kd ); 
       diff *= Kd;
       c1.red *= diff;
       c1.blue *= diff;
       c1.green *= diff; /////end dif
+      
+      normalize(norm);
       double pt1 = calculate_dot2( norm, light);
+      printf("pt1: %f\n", pt1);
       norm[0] *= (2*pt1); norm[1] *= (2*pt1); norm[2] *= (2*pt1);
       norm[0] -= light[0]; norm[1] -= light[1]; norm[2] -= light[2]; 
       double alpha = calculate_dot2( norm, view);
+      printf("alpha: %f\n", alpha);
       //alpha = alpha; //* alpha;
       c2.red *= ( alpha * Ks );
       c2.blue *= ( alpha * Ks );
       c2.green *= ( alpha * Ks ); /// end specu
       //c2 = Specular( c, ls, norm );
-      printf("Red is %d and %d, Blue is %d and %d, Green is %d and %d\n", c1.red, c2.red, c1.blue, c2.blue, c1.green, c2.green);
+      printf("Red is %d and %d, Blue is %d and %d, Green is %d and %d\n", c1.red, c2.red, c1.blue, c2.blue, c1.green, c2.green); // this is negative, close to max negative.......
+      //////Need to normalize all vectors!!!!!!!!!!!!!!!!!!
+
       
       c3.red *= Ka;
       c3.green *= Ka;
@@ -105,7 +111,7 @@ void draw_polygons( struct matrix *polygons, screen s, color c, struct matrix* z
       norm = calculate_normal( polygons->m[0][i] , polygons->m[1][i] , polygons->m[2][i],
 				 polygons->m[0][i+1],polygons->m[1][i+1],polygons->m[2][i+1]);
       
-      diff = calculate_dot2( light, norm );
+      diff = calculate_dot2( norm, light );
       diff *= Kd;
       c1.red *= diff;
       c1.blue *= diff;
